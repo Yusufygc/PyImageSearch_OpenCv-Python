@@ -15,19 +15,20 @@ ap.add_argument("-s", "--sample", type=int, default=21,
 	help="# of images to sample")
 args = vars(ap.parse_args())
 
-# grab the paths to the images, then randomly select a sample of
-# them
+# grab the paths to the images, then randomly select a sample of them
 imagePaths = list(paths.list_images(args["images"]))
 random.shuffle(imagePaths)
 imagePaths = imagePaths[:args["sample"]]
 
 # initialize the list of images
 images = []
+
 # loop over the list of image paths
 for imagePath in imagePaths:
 	# load the image and update the list of images
 	image = cv2.imread(imagePath)
 	images.append(image)
+	
 # construct the montages for the images
 montages = build_montages(images, (128, 196), (5, 1))
 

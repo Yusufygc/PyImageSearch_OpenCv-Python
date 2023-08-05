@@ -1,4 +1,5 @@
 # cd desktop/pyimagesearch/step_4/finding_shapes
+# shapes.jpg yanlış resim kod istediğimiz gibi çalışmıyor.
 # import the necessary packages
 import numpy as np
 import argparse
@@ -22,8 +23,10 @@ shapeMask = cv2.inRange(image, lower, upper)
 cnts = cv2.findContours(shapeMask.copy(), cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 cnts = imutils.grab_contours(cnts)
+
 print("I found {} black shapes".format(len(cnts)))
 cv2.imshow("Mask", shapeMask)
+
 # loop over the contours
 for c in cnts:
 	# draw the contour and show it

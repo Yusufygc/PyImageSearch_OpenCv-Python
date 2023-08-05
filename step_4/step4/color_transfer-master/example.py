@@ -9,8 +9,9 @@ import cv2
 
 def show_image(title, image, width = 300):
 	# resize the image to have a constant width, just to
-	# make displaying the images take up less screen real
-	# estate
+	# make displaying the images take up less screen real estate
+	# sadece görüntülerin ekranda daha az yer kaplamasını sağlamak için 
+	# görüntüyü sabit bir genişliğe sahip olacak şekilde yeniden boyutlandırın
 	r = width / float(image.shape[1])
 	dim = (width, int(image.shape[0] * r))
 	resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
