@@ -19,7 +19,8 @@ def find_color_card(image):
 		arucoDict, parameters=arucoParams)
 	
     
-    #Ardından, dört ArUco işaretçisini sol üst, sağ üst, sağ alt ve sol alt sırayla sıralayalım (yukarıdan aşağıya perspektif dönüşümü uygulamak için gerekli sıra):
+    # Ardından, dört ArUco işaretçisini sol üst, sağ üst, sağ alt ve sol alt sırayla sıralayalım
+	# (yukarıdan aşağıya perspektif dönüşümü uygulamak için gerekli sıra):
 	# try to extract the coordinates of the color correction card
 	try:
 		# otherwise, we've found the four ArUco markers, so we can
@@ -47,6 +48,7 @@ def find_color_card(image):
 	cardCoords = np.array([topLeft, topRight,
 		bottomRight, bottomLeft])
 	card = four_point_transform(image, cardCoords)
+
 	# return the color matching card to the calling function
 	return card
 
@@ -62,9 +64,11 @@ args = vars(ap.parse_args())
 print("[INFO] loading images...")
 ref = cv2.imread(args["reference"])
 image = cv2.imread(args["input"])
+
 # resize the reference and input images
 ref = imutils.resize(ref, width=600)
 image = imutils.resize(image, width=600)
+
 # display the reference and input images to our screen
 cv2.imshow("Reference", ref)
 cv2.imshow("Input", image)
@@ -73,6 +77,7 @@ cv2.imshow("Input", image)
 print("[INFO] finding color matching cards...")
 refCard = find_color_card(ref)
 imageCard = find_color_card(image)
+
 # if the color matching card is not found in either the reference
 # image or the input image, gracefully exit
 if refCard is None or imageCard is None:
@@ -83,11 +88,13 @@ if refCard is None or imageCard is None:
 # respectively
 cv2.imshow("Reference Color Card", refCard)
 cv2.imshow("Input Color Card", imageCard)
+
 # apply histogram matching from the color matching card in the
 # reference image to the color matching card in the input image
 print("[INFO] matching images...")
 imageCard = exposure.match_histograms(imageCard, refCard,
 	multichannel=True)
+
 # show our input color matching card after histogram matching
 cv2.imshow("Input Color Card After Matching", imageCard)
 cv2.waitKey(0)

@@ -4,7 +4,9 @@ import cv2
 
 # load the input image and show its dimensions, keeping in mind that
 # images are represented as a multi-dimensional NumPy array with
-# shape no. rows (height) x no. columns (width) x no. channels (depth)///Giriş resmini yükleyip boyutlarını göstermek için resimlerin çok boyutlu NumPy dizileri olarak temsil edildiğini unutmayın. Bu temsile göre resimler, satır sayısı (yükseklik) x sütun sayısı (genişlik) x kanal sayısı (derinlik) şeklinde bir yapıya sahiptir.
+# shape no. rows (height) x no. columns (width) x no. channels (depth)
+# Giriş resmini yükleyip boyutlarını göstermek için resimlerin çok boyutlu NumPy dizileri olarak temsil edildiğini unutmayın. 
+# Bu temsile göre resimler, satır sayısı (yükseklik) x sütun sayısı (genişlik) x kanal sayısı (derinlik) şeklinde bir yapıya sahiptir.
 image = cv2.imread("step_3\\jp.jpg") # cmd step_3 olmadan çalıştırıyor vsc step_3\\ olmadan çalıştırmıyor.
 (h, w, d) = image.shape
 print("width={}, height={}, depth={}".format(w, h, d))
@@ -72,8 +74,7 @@ rotated1 = imutils.rotate(image, -45)
 #--------------------------------------------------------------------------------------------------------------------#
 
 # OpenCV doesn't "care" if our rotated image is clipped after rotation
-# so we can instead use another imutils convenience function to help
-# us out
+# so we can instead use another imutils convenience function to help us out
 rotated2 = imutils.rotate_bound(image, 45)
 
 #cv2.imshow("Imutils Bound Rotation", rotated2) # opencv resmin kırpılıp bozulmasını sallamaz ama imutils bunu düzeltir.
@@ -87,7 +88,7 @@ blurred = cv2.GaussianBlur(image, (11, 11), 0)
 
 #cv2.imshow("Blurred", blurred)
 
-#Daha büyük çekirdekler daha bulanık bir görüntü verir. Daha küçük çekirdekler daha az bulanık görüntüler oluşturacaktır.çekirdenin boyutu tek sayı olmalıdır. çekirdek=kernel
+#Daha büyük çekirdekler daha bulanık bir görüntü verir. Daha küçük çekirdekler daha az bulanık görüntüler oluşturacaktır.çekirdeğin boyutu tek sayı olmalıdır. çekirdek=kernel
 
 #--------------------------------------------------------------------------------------------------------------------#
 #--------------------------------------------------------------------------------------------------------------------#
@@ -104,7 +105,7 @@ cv2.rectangle(output, (320, 60), (420, 160), (0, 0, 255), 2)
 # draw a blue 20px (filled in) circle on the image centered at
 # x=300,y=150
 output = image.copy()
-cv2.circle(output, (300, 150), 20, (255, 0, 0), -1)
+cv2.circle(output, (300, 150), 20, (255, 0, 0), -1) # -1 çemberi doldurur/ -1 fills the circle.
 
 #cv2.imshow("Circle", output)
 

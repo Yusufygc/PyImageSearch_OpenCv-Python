@@ -38,8 +38,7 @@ cv2.waitKey(0)
 #--------------------------------------------------------------------------------------------------------------------#
 #--------------------------------------------------------------------------------------------------------------------#
 
-# applying edge detection we can find the outlines of objects in
-# images
+# applying edge detection we can find the outlines of objects in images
 edged = cv2.Canny(gray, 30, 150)
 # minVal : A minimum threshold, in our case 30 . 
 # maxVal : The maximum threshold which is 150 in our example.
@@ -53,7 +52,8 @@ cv2.waitKey(0)
 # threshold the image by setting all pixel values less than 225
 # to 255 (white; foreground) and all pixel values >= 225 to 255
 # (black; background), thereby segmenting the image
-#Eşik değeri belirleyerek, görüntüdeki daha açık veya daha koyu bölgeleri ve konturları çıkarabiliriz. 
+
+# Eşik değeri belirleyerek, görüntüdeki daha açık veya daha koyu bölgeleri ve konturları çıkarabiliriz. 
 # Görüntüyü eşikleyerek, tüm piksel değerlerini 225'ten küçük olanları 255'e (beyaz; ön plan) 
 # ve 225'e eşit veya büyük olanları 255'e (siyah; arka plan) ayarlayarak görüntüyü segmente edebiliriz.
 thresh = cv2.threshold(gray, 225, 255, cv2.THRESH_BINARY_INV)[1]
@@ -63,7 +63,7 @@ cv2.waitKey(0)
 #--------------------------------------------------------------------------------------------------------------------#
 #--------------------------------------------------------------------------------------------------------------------#
 
-#Detecting and drawing contours
+# Detecting and drawing contours
 
 # find contours (i.e., outlines) of the foreground objects in the
 # thresholded image
@@ -71,6 +71,7 @@ cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 cnts = imutils.grab_contours(cnts)
 output = image.copy()
+
 # loop over the contours
 for c in cnts:
 	# draw each contour on the output image with a 3px thick purple
@@ -101,8 +102,8 @@ cv2.imshow("Eroded", mask)
 cv2.waitKey(0)
 
 #--------------------------------------------------------------------------------------------------------------------#
+#    erosions ->görüntüdeki beyaz bölgeyi küçültür  // dilations -> görüntüdeki beyaz bölgeyi büyütür                #
 #--------------------------------------------------------------------------------------------------------------------#
-
 
 # Benzer şekilde, maskede bölgeleri ön plana çıkarabiliriz. Bölgeleri büyütmek için sadece cv2.dilate kullanın
 # similarly, dilations can increase the size of the ground objects
@@ -115,12 +116,15 @@ cv2.waitKey(0)
 #--------------------------------------------------------------------------------------------------------------------#
 
 # Masking and bitwise operations
-# Maskeler, bir görüntünün ilgilenmediğimiz bölgelerini "maskelememizi" sağlar. Biz onlara "maske" diyoruz çünkü görüntülerin umursamadığımız bölgelerini gizleyeceklerdir.
-# Orijinal görüntümüzle karşılaştırıldığında eşikli görüntüyü maske olarak kullanırken, görüntünün geri kalanı “maskelendiğinden” renkli bölgeler yeniden görünür. Bu elbette basit bir örnek ama tahmin edebileceğiniz gibi maskeler çok güçlü.
+# Maskeler, bir görüntünün ilgilenmediğimiz bölgelerini "maskelememizi" sağlar. 
+# Biz onlara "maske" diyoruz çünkü görüntülerin umursamadığımız bölgelerini gizleyeceklerdir.
+# Orijinal görüntümüzle karşılaştırıldığında eşikli görüntüyü maske olarak kullanırken, görüntünün geri kalanı “maskelendiğinden”
+# renkli bölgeler yeniden görünür. Bu elbette basit bir örnek ama tahmin edebileceğiniz gibi maskeler çok güçlü.
 
 # a typical operation we may want to apply is to take our mask and
-# apply a bitwise AND to our input image, keeping only the masked
-# regions
+# apply a bitwise AND to our input image, keeping only the masked regions
+# Tipik bir işlem, maskemizi alıp giriş görüntümüze bit düzeyinde "ve" işlemi uygulamaktır, 
+# böylece yalnızca maskeleme yapılmış bölgeleri koruruz.
 mask = thresh.copy()
 output = cv2.bitwise_and(image, image, mask=mask)
 cv2.imshow("Output", output)

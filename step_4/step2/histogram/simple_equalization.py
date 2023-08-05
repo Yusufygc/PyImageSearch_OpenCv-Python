@@ -20,8 +20,6 @@ Notice that we supply two parameters to cv2.createCLAHE:
 clipLimit: This is the threshold for contrast limiting
 tileGridSize: Divides the input image into M x N tiles and then applies histogram equalization to each local tile
 
-You will get practice using both cv2.equalizeHist and cv2.createCLAHE in the remainder of this guide.
-
 Temel histogram eşitleme, görüntünün genel kontrastını artırmayı amaçlar ve sıkça kullanılan piksel yoğunluklarını "dağıtarak" yapar.
 """
 
@@ -46,6 +44,8 @@ equalized = cv2.equalizeHist(gray)
 
 """
 Note: When performing histogram equalization with OpenCV, we must supply a grayscale/single-channel image. If we try to pass in a multi-channel image, OpenCV will throw an error. To perform histogram equalization on a multi-channel image, you would need to (1) split the image into its respective channels, (2) equalize each channel, and (3) merge the channels back together.
+
+OpenCV ile histogram eşitleme işlemi yaparken, gri tonlamalı/tek kanallı bir görüntü sağlamamız gerekmektedir. Eğer çoklu kanallı bir görüntü geçirmeye çalışırsak, OpenCV bir hata verecektir. Çoklu kanallı bir görüntüde histogram eşitleme yapmak için şu adımları izlemelisiniz: (1) Görüntüyü ilgili kanallarına ayırın, (2) her bir kanalı eşitleyin ve (3) kanalları tekrar birleştirin.
 """
 
 # show the original grayscale image and equalized image

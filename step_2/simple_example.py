@@ -1,5 +1,6 @@
-
 import argparse
+
+# HOW TO RUN THIS SCRIPT: open cmd write the file path and work this -> python simple_example.py --name "Name"
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
