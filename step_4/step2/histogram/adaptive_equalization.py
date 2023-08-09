@@ -12,6 +12,8 @@ ap.add_argument("-t", "--tile", type=int, default=8,
 	help="tile grid size -- divides image into tile x time cells")
 args = vars(ap.parse_args())
 
+#-----------------------------------------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------------------------------------------------------#
 """
 Sonra üç komut satırı argümanımız var, bunlardan biri zorunlu, diğer ikisi ise isteğe bağlıdır (ancak CLAHE ile deney yaparken ayarlama ve oynamak için kullanışlıdır):
 
@@ -23,7 +25,15 @@ Sonra üç komut satırı argümanımız var, bunlardan biri zorunlu, diğer iki
 
 Şimdi OpenCV ile CLAHE uygulayalım:
 """
+#-----------------------------------------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------------------------------------------------------#
+"""
+Geleneksel bir yöntem olarak “Adaptive Histogram Equalization” kullanırız ancak bu durumda global contrass değerini kullanmak zorundayiz. Bunu sonucu olarak görüntüde farklı bölgelerde çok karanlık ve çok patlamış bölgeler oluşabilir. Bu sorunu çözebilmek adına alternatif bir yöntem olan CLAHE (Contrast Limited Adaptive Histogram Equazation) kullanabiliriz.
 
+CLAHE yönteminin geleneksel equalization’a göre farkı, görüntüyü 8x8 gibi parçalara ayırarak her bir kare içerisinde histogram equalization yapmasıdır, ayrıca contrass limiti belirleme imkanı tanınır. Böylece daha temiz istediğimiz bilgilerin ayrıştığı bir görüntü elde edebililiriz.
+"""
+#-----------------------------------------------------------------------------------------------------------------------------#
+#-----------------------------------------------------------------------------------------------------------------------------#
 # load the input image from disk and convert it to grayscale
 print("[INFO] loading input image...")
 image = cv2.imread(args["image"])
