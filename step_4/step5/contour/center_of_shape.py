@@ -26,11 +26,11 @@ cnts = imutils.grab_contours(cnts)
 # loop over the contours
 for c in cnts:
 	# compute the center of the contour
-	M = cv2.moments(c)
+	M = cv2.moments(c) # 
 
-	if M["m00"] != 0:
-		cX = int(M["m10"] / M["m00"])
-		cY = int(M["m01"] / M["m00"])
+	if M["m00"] != 0:# m00: area of the contour 
+		cX = int(M["m10"] / M["m00"]) # m10: sum of x coordinates of the contour
+		cY = int(M["m01"] / M["m00"]) # m01: sum of y coordinates of the contour
 	else:
 		# set values as what you need in the situation
 		cX, cY = 0, 0
