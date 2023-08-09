@@ -12,7 +12,8 @@ args = vars(ap.parse_args())
 # load the image
 image = cv2.imread(args["image"])
 
-# define the list of boundaries
+# define the list of boundaries 
+# sınırları liste halinde tanımlayalım
 boundaries = [
 	([17, 15, 100], [50, 56, 200]),
 	([86, 31, 4], [220, 88, 50]),
@@ -21,8 +22,8 @@ boundaries = [
 ] # burdaki zımbırtılar yüzünden kendi ayarladığım bloks.png düzgün çalışmadı
 
 
-
 # color detection
+
 # loop over the boundaries
 for (lower, upper) in boundaries:
 	# create NumPy arrays from the boundaries
@@ -31,6 +32,7 @@ for (lower, upper) in boundaries:
 	
     # find the colors within the specified boundaries and apply
 	# the mask
+	# belirtilen sınırlar içindeki renkleri bulalım ve uygulayalım
 	mask = cv2.inRange(image, lower, upper)
 	output = cv2.bitwise_and(image, image, mask = mask)
 	
