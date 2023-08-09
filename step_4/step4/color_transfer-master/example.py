@@ -11,7 +11,7 @@ def show_image(title, image, width = 300):
 	# resize the image to have a constant width, just to
 	# make displaying the images take up less screen real estate
 	# sadece görüntülerin ekranda daha az yer kaplamasını sağlamak için 
-	# görüntüyü sabit bir genişliğe sahip olacak şekilde yeniden boyutlandırın
+	# görüntüyü sabit bir genişliğe sahip olacak şekilde yeniden boyutlandıralım
 	r = width / float(image.shape[1])
 	dim = (width, int(image.shape[0] * r))
 	resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
@@ -47,6 +47,7 @@ target = cv2.imread(args["target"])
 
 # transfer the color distribution from the source image
 # to the target image
+# renk dağılımını kaynak görüntüden hedef görüntüye aktaralım
 transfer = color_transfer(source, target, clip=args["clip"], preserve_paper=args["preservePaper"])
 
 # check to see if the output image should be saved
