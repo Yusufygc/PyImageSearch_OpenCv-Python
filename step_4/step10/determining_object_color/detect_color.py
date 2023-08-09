@@ -33,7 +33,6 @@ cnts = imutils.grab_contours(cnts)
 sd = ShapeDetector()
 cl = ColorLabeler()
 
-
 # loop over the contours
 for c in cnts:
 	# compute the center of the contour
