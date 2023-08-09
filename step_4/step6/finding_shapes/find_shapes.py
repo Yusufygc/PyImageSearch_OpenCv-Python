@@ -15,11 +15,13 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 
 # find all the 'black' shapes in the image
+# resimdeki siyah renkli şekilleri buluyoruz.
 lower = np.array([0, 0, 0])
 upper = np.array([15, 15, 15])
 shapeMask = cv2.inRange(image, lower, upper)
 
 # find the contours in the mask
+# maske içindeki konturları buluyoruz. 
 cnts = cv2.findContours(shapeMask.copy(), cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 cnts = imutils.grab_contours(cnts)
