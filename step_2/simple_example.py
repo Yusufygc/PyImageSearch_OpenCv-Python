@@ -1,5 +1,7 @@
 import argparse
-
+# argparse: komut satırı argümanlarını ayrıştırmak için kullanılan bir modül
+# pratik olması için kullanıcıyı selamlayan bir kod satırı.
+# girdi termnalde yazılırken --name "Name" şeklinde yazılmalıdır.
 # HOW TO RUN THIS SCRIPT: open cmd write the file path and work this -> python simple_example.py --name "Name"
 
 # construct the argument parse and parse the arguments
