@@ -5,7 +5,10 @@ import argparse
 import random
 import cv2
 
-# Elemannın kullandığı siteyi kullanamadım bu yüzden montaj çalışmadı ama siyah piksel ile doldurdu kodlar çalışıyor ama resim çekemiyorum
+# https://www.pyimagesearch.com/2017/05/29/montages-with-opencv/
+# Siteden resim çekemedim ama kodlar çalışıyor.
+# belirlenen ölçeklerde normalde resim olması gerek ama 
+# ben resim çekemediğim için siyah olarak gözüküyor.
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
