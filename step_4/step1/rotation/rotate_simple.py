@@ -25,6 +25,8 @@ for angle in np.arange(0, 360, 15):
 	
 # loop over the rotation angles again, this time ensuring
 # no part of the image is cut off
+# döndürme açıları üzerinde tekrar döngü kuralım, 
+# görüntünün hiçbir kısmının kesilmediğinden emin olalım.
 for angle in np.arange(0, 360, 15):
 	rotated = imutils.rotate_bound(image, angle)
 	cv2.imshow("Rotated (Correct)", rotated)

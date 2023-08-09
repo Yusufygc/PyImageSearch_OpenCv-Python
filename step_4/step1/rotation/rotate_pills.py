@@ -38,6 +38,7 @@ cnts = imutils.grab_contours(cnts)
 # ensure at least one contour was found // en az bir kontur bulunduğundan emin olun
 if len(cnts) > 0:
 	# grab the largest contour, then draw a mask for the pill
+	# en büyük konturu alalım, ardından hap için bir maske çizelim.
 	c = max(cnts, key=cv2.contourArea)
 	mask = np.zeros(gray.shape, dtype="uint8")
 	cv2.drawContours(mask, [c], -1, 255, -1)
@@ -45,7 +46,9 @@ if len(cnts) > 0:
 	# compute its bounding box of pill, then extract the ROI,
 	# and apply the mask
 	(x, y, w, h) = cv2.boundingRect(c)
-	imageROI = image[y:y + h, x:x + w] #Hem sınırlayıcı kutuyu hem de maskeyi kullanarak gerçek hap bölgesi ROI'sini (Satır 42-45) çıkarabiliriz.
+	imageROI = image[y:y + h, x:x + w] 
+	# Hem sınırlayıcı kutuyu hem de maskeyi kullanarak 
+	# gerçek hap bölgesi ROI'sini (Satır 42-45) çıkarabiliriz.
 	maskROI = mask[y:y + h, x:x + w]
 	imageROI = cv2.bitwise_and(imageROI, imageROI,
 		mask=maskROI)
@@ -54,6 +57,7 @@ if len(cnts) > 0:
 #--------------------------------------------------------------------------------------------------------------------#
 
 	# loop over the rotation angles
+	# döndürme açıları üzerinde döngü kuralım.
 	for angle in np.arange(0, 360, 15):
 		rotated = imutils.rotate(imageROI, angle)
 		cv2.imshow("Rotated (Problematic)", rotated)
@@ -61,6 +65,8 @@ if len(cnts) > 0:
 		
 	# loop over the rotation angles again, this time ensure the
 	# entire pill is still within the ROI after rotation
+	# dönüş açıları üzerinden tekrar döngü yapalım,
+	# bu sefer tüm hapın dönüşten sonra hala ROI içinde olduğundan emin olalım
 	for angle in np.arange(0, 360, 15):
 		rotated = imutils.rotate_bound(imageROI, angle)
 		cv2.imshow("Rotated (Correct)", rotated)
