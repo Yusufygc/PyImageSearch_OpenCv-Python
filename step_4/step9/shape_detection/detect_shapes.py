@@ -11,7 +11,9 @@ ap.add_argument("-i", "--image", required=True,
 args = vars(ap.parse_args())
 
 # load the image and resize it to a smaller factor so that
-# the shapes can be approximated better
+# the shapes can be approximated better 
+# görüntüyü yükleyin ve şekillere daha iyi yaklaşılabilmesi
+# için daha küçük bir faktöre göre yeniden boyutlandırın
 image = cv2.imread(args["image"])
 resized = imutils.resize(image, width=300)
 ratio = image.shape[0] / float(resized.shape[0])

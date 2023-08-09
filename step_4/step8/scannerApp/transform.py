@@ -10,10 +10,10 @@ def order_points(pts):
 	rect = np.zeros((4, 2), dtype = "float32")
 	
 	# the top-left point will have the smallest sum, whereas
-	# the bottom-right point will have the largest sum
+	# the bottom-right point will have the largest sum 0->top-left, 1->top-right, 2->bottom-right, 3->bottom-left
 	s = pts.sum(axis = 1)
-	rect[0] = pts[np.argmin(s)]
-	rect[2] = pts[np.argmax(s)]
+	rect[0] = pts[np.argmin(s)] # top-left corner 
+	rect[2] = pts[np.argmax(s)] # bottom-right corner 
 	
 	# now, compute the difference between the points, the
 	# top-right point will have the smallest difference,
@@ -34,6 +34,8 @@ def four_point_transform(image, pts):
 	# compute the width of the new image, which will be the
 	# maximum distance between bottom-right and bottom-left
 	# x-coordiates or the top-right and top-left x-coordinates
+	# sağ alt ve sol alt x koordinatları veya sağ üst ve sol üst x koordinatları
+	# arasındaki maksimum mesafe olacak yeni görüntünün genişliğini hesaplayın
 	widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
 	widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
 	maxWidth = max(int(widthA), int(widthB))
@@ -41,6 +43,8 @@ def four_point_transform(image, pts):
 	# compute the height of the new image, which will be the
 	# maximum distance between the top-right and bottom-right
 	# y-coordinates or the top-left and bottom-left y-coordinates
+	# sağ üst ve sağ alt y koordinatları veya sol üst ve sol alt y koordinatları
+	# arasındaki maksimum mesafe olacak yeni görüntünün yüksekliğini hesaplayın.
 	heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
 	heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
 	maxHeight = max(int(heightA), int(heightB))
@@ -50,6 +54,10 @@ def four_point_transform(image, pts):
 	# (i.e. top-down view) of the image, again specifying points
 	# in the top-left, top-right, bottom-right, and bottom-left
 	# order
+	# Artık yeni görüntünün boyutlarına sahip olduğumuza göre, 
+	# görüntünün "kuş bakışı" (yani yukarıdan aşağıya görünümü) elde etmek için 
+	# hedef noktaları kümesini oluşturun ve yine sol üst, sağ üst,sağ ve sol alt 
+	# kısımlardaki noktaları belirtin.
 	dst = np.array([
 		[0, 0], #top-left corner
 		[maxWidth - 1, 0], #top-right corner

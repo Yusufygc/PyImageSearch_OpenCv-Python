@@ -9,8 +9,9 @@ gray = cv2.GaussianBlur(gray, (5, 5), 0)
 
 # threshold the image, then perform a series of erosions +
 # dilations to remove any small regions of noise
+# görüntüyü eşikleyin, ardından küçük gürültü bölgelerini gidermek için bir dizi aşınma + genişleme gerçekleştirin
 thresh = cv2.threshold(gray, 45, 255, cv2.THRESH_BINARY)[1] 
-# Satır 12, el bölgesini görüntünün geri kalanından ayırmamıza izin vererek eşikleme gerçekleştirir
+# Satır 13, el bölgesini görüntünün geri kalanından ayırmamıza izin vererek eşikleme gerçekleştirir
 thresh = cv2.erode(thresh, None, iterations=2)
 thresh = cv2.dilate(thresh, None, iterations=2)
 
@@ -21,7 +22,7 @@ cnts = imutils.grab_contours(cnts)
 c = max(cnts, key=cv2.contourArea)
 # Elin ana hatlarını tespit etmek için cv2.findContours'a bir çağrı yapıyoruz, 
 # ardından elin kendisi olduğunu varsaydığımız en büyük olanı bulmak için 
-# konturları sıralıyoruz (Satır 18-21).
+# konturları sıralıyoruz (Satır 19-22).
 
 # determine the most extreme points along the contour
 extLeft = tuple(c[c[:, :, 0].argmin()][0])
@@ -43,5 +44,7 @@ cv2.imshow("Image", image)
 cv2.waitKey(0)
 
 """
-cv2.findContours tarafından döndürülen konturlar listesinin, (x, y)-koordinatlarından oluşan bir NumPy dizisi olduğunu unutmayın. Bu dizide argmin()  ve argmax()  öğesini çağırarak uç (x, y)-koordinatlarını çıkarabiliriz.
+cv2.findContours tarafından döndürülen konturlar listesinin, (x, y)-koordinatlarından oluşan 
+bir NumPy dizisi olduğunu unutmayın. Bu dizide argmin()  ve argmax()  öğesini çağırarak 
+uç (x, y)-koordinatlarını çıkarabiliriz.
 """

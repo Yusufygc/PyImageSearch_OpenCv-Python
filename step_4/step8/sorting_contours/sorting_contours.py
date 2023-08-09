@@ -9,12 +9,12 @@ def sort_contours(cnts, method="left-to-right"):
 	reverse = False
 	i = 0
 	
-	# handle if we need to sort in reverse
+	# handle if we need to sort in reverse # tersine sıralamamız gerekirse halledin
 	if method == "right-to-left" or method == "bottom-to-top":
 		reverse = True
 		
 	# handle if we are sorting against the y-coordinate rather than
-	# the x-coordinate of the bounding box
+	# the x-coordinate of the bounding box 
 	if method == "top-to-bottom" or method == "bottom-to-top":
 		i = 1
 		
@@ -59,11 +59,11 @@ for chan in cv2.split(image):
 	edged = cv2.Canny(chan, 50, 200)
 	accumEdged = cv2.bitwise_or(accumEdged, edged)
 	
-# show the accumulated edge map
+# show the accumulated edge map // birikmiş kenar haritasını göster.
 cv2.imshow("Edge Map", accumEdged)
 
 # find contours in the accumulated image, keeping only the largest
-# ones
+# ones // en büyük olanları tutarak, birikmiş görüntüdeki konturları bulun.
 cnts = cv2.findContours(accumEdged.copy(), cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 cnts = imutils.grab_contours(cnts)
@@ -87,3 +87,5 @@ for (i, c) in enumerate(cnts):
 # show the output image
 cv2.imshow("Sorted", image)
 cv2.waitKey(0)
+
+# python sorting_contours.py --image src/legos.png --method top-to-bottom

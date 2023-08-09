@@ -1,6 +1,6 @@
 # import the necessary packages
 from transform import four_point_transform
-from skimage.filters import threshold_local # Bu işlev, taranan görüntümüzde "siyah beyaz" hissi elde etmemize yardımcı olacaktır.
+from skimage.filters import threshold_local # Bu işlev, taranan görüntümüzde "siyah beyaz" elde etmemize yardımcı olacaktır.
 import numpy as np
 import argparse
 import cv2
@@ -51,7 +51,7 @@ cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
 
 # loop over the contours
 for c in cnts:
-	# approximate the contour
+	# approximate the contour // konturu yaklaşıklaştırma
 	peri = cv2.arcLength(c, True)
 	approx = cv2.approxPolyDP(c, 0.02 * peri, True)
 	
@@ -74,7 +74,9 @@ cv2.waitKey(0)
 
 # apply the four point transform to obtain a top-down
 # view of the original image
-warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio) #Ancak taramayı yeniden boyutlandırılmış görüntüde değil orijinal görüntüde yapmak istiyoruz, bu nedenle kontur noktalarını yeniden boyutlandırma oranıyla çarpıyoruz.
+warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio) 
+# Ancak taramayı yeniden boyutlandırılmış görüntüde değil orijinal görüntüde yapmak istiyoruz,
+# bu nedenle kontur noktalarını yeniden boyutlandırma oranıyla çarpıyoruz.
 
 # convert the warped image to grayscale, then threshold it
 # to give it that 'black and white' paper effect
