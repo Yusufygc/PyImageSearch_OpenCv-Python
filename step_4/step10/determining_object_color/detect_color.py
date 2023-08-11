@@ -13,12 +13,18 @@ args = vars(ap.parse_args())
 
 # load the image and resize it to a smaller factor so that
 # the shapes can be approximated better
+# görüntüyü yükleyin ve şekillere daha,
+# iyi yaklaşılabilmesi için 
+# daha küçük bir faktöre göre yeniden boyutlandırın
 image = cv2.imread(args["image"])
 resized = imutils.resize(image, width=300)
 ratio = image.shape[0] / float(resized.shape[0])
 
 # blur the resized image slightly, then convert it to both
 # grayscale and the L*a*b* color spaces
+# yeniden boyutlandırılmış görüntüyü 
+# biraz bulanıklaştırın, ardından 
+# hem gri tonlamaya hem de L*a*b* renk uzaylarına dönüştürün
 blurred = cv2.GaussianBlur(resized, (5, 5), 0)
 gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
 lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
@@ -47,6 +53,9 @@ for c in cnts:
 	# multiply the contour (x, y)-coordinates by the resize ratio,
 	# then draw the contours and the name of the shape and labeled
 	# color on the image
+	# kontur (x, y) koordinatlarını yeniden boyutlandırma oranıyla
+	# çarpalım, ardından konturları ve şeklin adını ve 
+	# etiketli rengi görüntüye çizelim
 	c = c.astype("float")
 	c *= ratio
 	c = c.astype("int")
