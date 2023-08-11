@@ -12,8 +12,8 @@ args = vars(ap.parse_args())
 
 # load the image and resize it to a smaller factor so that
 # the shapes can be approximated better 
-# görüntüyü yükleyin ve şekillere daha iyi yaklaşılabilmesi
-# için daha küçük bir faktöre göre yeniden boyutlandırın
+# görüntüyü yükleyelim ve şekillere daha iyi yaklaşılabilmesi
+# için daha küçük bir faktöre göre yeniden boyutlandıralım
 image = cv2.imread(args["image"])
 resized = imutils.resize(image, width=300)
 ratio = image.shape[0] / float(resized.shape[0])
@@ -35,6 +35,8 @@ sd = ShapeDetector()
 for c in cnts:
 	# compute the center of the contour, then detect the name of the
 	# shape using only the contour
+	# konturun merkezini hesaplayalım,
+	# ardından sadece konturu kullanarak şeklin adını bulalım
 	M = cv2.moments(c)
 	cX = int((M["m10"] / M["m00"]) * ratio)
 	cY = int((M["m01"] / M["m00"]) * ratio)
