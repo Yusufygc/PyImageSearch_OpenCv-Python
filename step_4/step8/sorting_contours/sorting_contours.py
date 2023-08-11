@@ -9,7 +9,7 @@ def sort_contours(cnts, method="left-to-right"):
 	reverse = False
 	i = 0
 	
-	# handle if we need to sort in reverse # tersine sıralamamız gerekirse halledin
+	# handle if we need to sort in reverse # tersine sıralamamız gerekirse halledelim
 	if method == "right-to-left" or method == "bottom-to-top":
 		reverse = True
 		
@@ -30,11 +30,14 @@ def sort_contours(cnts, method="left-to-right"):
 def draw_contour(image, c, i):
 	# compute the center of the contour area and draw a circle
 	# representing the center
+	# kontur alanının merkezini hesaplayalım
+	# ve merkezi temsil eden bir daire çizelim
 	M = cv2.moments(c)
 	cX = int(M["m10"] / M["m00"])
 	cY = int(M["m01"] / M["m00"])
 	
 	# draw the countour number on the image
+	# görüntüdeki kontur numarasını çizelim
 	cv2.putText(image, "#{}".format(i + 1), (cX - 20, cY), cv2.FONT_HERSHEY_SIMPLEX,
 		1.0, (255, 255, 255), 2)
 	
@@ -50,7 +53,7 @@ args = vars(ap.parse_args())
 # load the image and initialize the accumulated edge image
 image = cv2.imread(args["image"])
 accumEdged = np.zeros(image.shape[:2], dtype="uint8")
-
+# accumulate = biriktirmek, birikmek,yığmakk
 # loop over the blue, green, and red channels, respectively
 for chan in cv2.split(image):
 	# blur the channel, extract edges from it, and accumulate the set
@@ -59,11 +62,11 @@ for chan in cv2.split(image):
 	edged = cv2.Canny(chan, 50, 200)
 	accumEdged = cv2.bitwise_or(accumEdged, edged)
 	
-# show the accumulated edge map // birikmiş kenar haritasını göster.
+# show the accumulated edge map // birikmiş kenar haritasını gösterelim.
 cv2.imshow("Edge Map", accumEdged)
 
 # find contours in the accumulated image, keeping only the largest
-# ones // en büyük olanları tutarak, birikmiş görüntüdeki konturları bulun.
+# ones // en büyük olanları tutarak, birikmiş görüntüdeki konturları bulalım.
 cnts = cv2.findContours(accumEdged.copy(), cv2.RETR_EXTERNAL,
 	cv2.CHAIN_APPROX_SIMPLE)
 cnts = imutils.grab_contours(cnts)
@@ -78,6 +81,7 @@ for (i, c) in enumerate(cnts):
 cv2.imshow("Unsorted", orig)
 
 # sort the contours according to the provided method
+# konturları sağlanan yönteme göre sıralayalım
 (cnts, boundingBoxes) = sort_contours(cnts, method=args["method"])
 
 # loop over the (now sorted) contours and draw them
@@ -88,4 +92,4 @@ for (i, c) in enumerate(cnts):
 cv2.imshow("Sorted", image)
 cv2.waitKey(0)
 
-# python sorting_contours.py --image src/legos.png --method top-to-bottom
+# python sorting_contours.py --image shapes.png --method top-to-bottom
