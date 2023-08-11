@@ -21,6 +21,8 @@ args = vars(ap.parse_args())
 
 # load the image and compute the ratio of the old height
 # to the new height, clone it, and resize it
+# görüntüyü yükleyelim ve eski yüksekliğin yeni yüksekliğe
+# oranını hesaplayalım, kopyalayalım ve yeniden boyutlandıralım
 image = cv2.imread(args["image"])
 ratio = image.shape[0] / 500.0
 orig = image.copy()
@@ -30,7 +32,7 @@ image = imutils.resize(image, height = 500)
 # in the image
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (5, 5), 0)
-edged = cv2.Canny(gray, 75, 200)
+edged = cv2.Canny(gray, 75, 200) # Canny kenar algılama algoritması
 
 # show the original image and the edge detected image
 print("STEP 1: Edge Detection")
@@ -61,7 +63,8 @@ for c in cnts:
 		screenCnt = approx
 		break
 	
-# show the contour (outline) of the piece of paper
+# show the contour (outline) of the piece of paper 
+# kağıdın konturunu (ana hat) gösterelim
 print("STEP 2: Find contours of paper")
 cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
 cv2.imshow("Outline", image)
@@ -75,8 +78,10 @@ cv2.waitKey(0)
 # apply the four point transform to obtain a top-down
 # view of the original image
 warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio) 
-# Ancak taramayı yeniden boyutlandırılmış görüntüde değil orijinal görüntüde yapmak istiyoruz,
-# bu nedenle kontur noktalarını yeniden boyutlandırma oranıyla çarpıyoruz.
+# Ancak taramayı yeniden boyutlandırılmış görüntüde değil
+# orijinal görüntüde yapmak istiyoruz,
+# bu nedenle kontur noktalarını 
+# yeniden boyutlandırma oranıyla çarpıyoruz.
 
 # convert the warped image to grayscale, then threshold it
 # to give it that 'black and white' paper effect
