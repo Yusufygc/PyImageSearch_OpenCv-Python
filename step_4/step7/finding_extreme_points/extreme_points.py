@@ -9,10 +9,11 @@ gray = cv2.GaussianBlur(gray, (5, 5), 0)
 
 # threshold the image, then perform a series of erosions +
 # dilations to remove any small regions of noise
-# görüntüyü eşikleyin, ardından küçük gürültü bölgelerini gidermek için bir dizi aşınma + genişleme gerçekleştirin
+# görüntüyü eşikleyin, ardından küçük gürültü bölgelerini gidermek için
+# bir dizi aşınma + genişleme gerçekleştirin
 thresh = cv2.threshold(gray, 45, 255, cv2.THRESH_BINARY)[1] 
-# Satır 13, el bölgesini görüntünün geri kalanından ayırmamıza izin vererek eşikleme gerçekleştirir
-thresh = cv2.erode(thresh, None, iterations=2)
+# Satır 14, el bölgesini görüntünün geri kalanından ayırmamıza izin vererek eşikleme gerçekleştirir
+thresh = cv2.erode(thresh, None, iterations=2) 
 thresh = cv2.dilate(thresh, None, iterations=2)
 
 # find contours in thresholded image, then grab the largest one
