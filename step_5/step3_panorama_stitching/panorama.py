@@ -61,7 +61,7 @@ class Stitcher:
 		# check to see if the keypoint matches should be visualized
 		if showMatches: # anahtar nokta eşleşmelerinin görselleştirilmesi gerekip gerekmediğini kontrol ederiz.
 			vis = self.drawMatches(imageA, imageB, kpsA, kpsB, matches,
-				status)
+				status) # anahtar nokta eşleşmelerini görselleştiririz.
 			
 			# return a tuple of the stitched image and the
 			# visualization
@@ -69,3 +69,111 @@ class Stitcher:
 		
 		# return the stitched image
 		return result
+	
+
+	def detectAndDescribe(self, image):
+		# convert the image to grayscale
+		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+		# check to see if we are using OpenCV 3.X
+		if self.isv3: # OpenCV 3.X kullanıp kullanmadığımızı kontrol ederiz.
+			# detect and extract features from the image
+			descriptor = cv2.xfeatures2d.SIFT_create() # SIFT öznitelik çıkarıcısını oluştururuz. SIFT = Scale-Invariant Feature Transform (Ölçekten Bağımsız Özellik Dönüşümü)
+			(kps, features) = descriptor.detectAndCompute(image, None) # anahtar noktaları ve özellikleri çıkarırız.
+
+		# otherwise, we are using OpenCV 2.4.X
+		else:
+			# detect keypoints in the image
+			detector = cv2.FeatureDetector_create("SIFT")
+			kps = detector.detect(gray)
+			"""
+			Bu noktadan sonra, SIFT özellik çıkarıcımızı yapılandırmak için `cv2.DescriptorExtractor_create`'i "SIFT" anahtar kelimesi kullanarak başlatmamız gerekmektedir. Çıkarıcı'nın `compute` yöntemini çağırmak, görüntüde tespit edilen her bir anahtar noktanın çevresini nicelendiren bir dizi özellik vektörü döndürür.
+			"""
+			# extract features from the image
+			extractor = cv2.DescriptorExtractor_create("SIFT")
+			(kps, features) = extractor.compute(gray, kps)
+
+		# convert the keypoints from KeyPoint objects to NumPy
+		# arrays
+		kps = np.float32([kp.pt for kp in kps]) # anahtar noktalarını NumPy dizilerine dönüştürürüz.
+
+		# return a tuple of keypoints and features
+		return (kps, features)
+	
+
+	def matchKeypoints(self, kpsA, kpsB, featuresA, featuresB,
+		ratio, reprojThresh):
+		"""
+		`matchKeypoints` işlevi dört argüman gerektirir: İlk görüntü ile ilişkilendirilmiş anahtar noktalar ve özellik vektörleri, bunu takip eden ikinci görüntü ile ilişkilendirilmiş anahtar noktalar ve özellik vektörleri. Ayrıca David Lowe'un oran testi değişkeni ve RANSAC yeniden yansıtma eşiği de sağlanmalıdır.
+		"""
+		# compute the raw matches and initialize the list of actual
+		# matches
+		matcher = cv2.DescriptorMatcher_create("BruteForce") # brute-force matcher'ı oluştururuz. brute-force matcher, iki görüntü arasındaki tüm özellik vektörlerini karşılaştırır.
+		rawMatches = matcher.knnMatch(featuresA, featuresB, 2) # özellik vektörlerini karşılaştırırız.
+		"""
+		knnMatch çağrısı, k=2'yi kullanarak iki özellik vektörü seti arasında k-NN eşleştirmesi gerçekleştirir (her bir özellik vektörü için ilk iki eşleşmenin döndürüldüğünü gösterir).En iyi eşleşme yerine ilk iki eşleşmeyi istememizin nedeni, hatalı pozitif eşleşme budaması için David Lowe'un oran testini uygulamamız gerektiğidir.
+		"""
+		matches = []
+
+		# loop over the raw matches
+		for m in rawMatches: # ham eşleşmeler üzerinde döngüye gireriz. 
+			"""
+			Yanlış pozitif eşleşmeleri elemek için, her biri için sırayla rawMatches'in üzerinden geçebiliriz (Satır 119) ve yüksek kaliteli özellik eşleştirmelerini belirlemek için Lowe'un oran testini uygulayabiliriz. Tipik olarak, Lowe'un oranı genellikle [0.7, 0.8] aralığındadır.
+			"""
+			# ensure the distance is within a certain ratio of each
+			# other (i.e. Lowe's ratio test)
+			if len(m) == 2 and m[0].distance < m[1].distance * ratio:
+				matches.append((m[0].trainIdx, m[0].queryIdx))
+
+		"""
+		Lowe'un oran testini kullanarak eşleşmeleri elde ettikten sonra, 
+		iki anahtar nokta grubu arasındaki homografiyi hesaplayabiliriz:
+		
+		"""
+		# computing a homography requires at least 4 matches
+		if len(matches) > 4:
+			# construct the two sets of points
+			ptsA = np.float32([kpsA[i] for (_, i) in matches])
+			ptsB = np.float32([kpsB[i] for (i, _) in matches])
+
+			# compute the homography between the two sets of points
+			(H, status) = cv2.findHomography(ptsA, ptsB, cv2.RANSAC,
+				reprojThresh)
+			
+			# return the matches along with the homograpy matrix
+			# and status of each matched point
+			return (matches, H, status)
+		
+		# otherwise, no homograpy could be computed
+		return None
+		"""
+		İki nokta kümesi arasında bir homografi hesaplamak, en az dört eşleşmelik bir başlangıç ​​kümesi gerektirir. Daha güvenilir bir homografi tahmini için, yalnızca dört eşleşen noktadan önemli ölçüde daha fazlasına sahip olmamız gerekir.
+		"""
+	
+	"""
+	Son olarak, Stitcher yöntemimizdeki son yöntem olan drawMatches, iki resim arasındaki anahtar nokta eşleşmelerini görselleştirmek için kullanılır:
+	"""
+	def drawMatches(self, imageA, imageB, kpsA, kpsB, matches, status):
+		# initialize the output visualization image
+		(hA, wA) = imageA.shape[:2]
+		(hB, wB) = imageB.shape[:2]
+		vis = np.zeros((max(hA, hB), wA + wB, 3), dtype="uint8")
+		vis[0:hA, 0:wA] = imageA
+		vis[0:hB, wA:] = imageB
+
+		# loop over the matches
+		for ((trainIdx, queryIdx), s) in zip(matches, status):
+			# only process the match if the keypoint was successfully
+			# matched
+			if s == 1:
+				# draw the match
+				ptA = (int(kpsA[queryIdx][0]), int(kpsA[queryIdx][1]))
+				ptB = (int(kpsB[trainIdx][0]) + wA, int(kpsB[trainIdx][1]))
+				cv2.line(vis, ptA, ptB, (0, 255, 0), 1)
+
+		# return the visualization
+		return vis
+		"""
+		Bu yöntem, orijinal iki görüntüyü, her bir görüntüyle ilişkilendirilmiş anahtar noktalar kümesini, Lowe'un oran testini uyguladıktan sonra ilk eşleştirmeleri ve nihayet homografi hesaplamasından sağlanan durum listesini içermemizi gerektirir. Bu değişkenleri kullanarak, ilk görüntüdeki N anahtar noktasından ikinci görüntüdeki M anahtar noktasına düz bir çizgi çizerek "içeride" kalan anahtar noktalarını görselleştirebiliriz.
+		"""	    
+		
